@@ -31,7 +31,8 @@ grails.project.dependency.resolution = {
 
     dependencies {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
-        runtime "org.lesscss:lesscss:1.3.0"
+        runtime "org.mozilla:rhino:1.7R4" // override in Asual LESS engine for perf gains.
+        runtime "com.asual.lesscss:lesscss-engine:1.3.0"
 
         test("org.gmock:gmock:0.8.2") {
             export = false

@@ -8,7 +8,7 @@ import org.grails.plugin.resource.ResourceTagLib
 
 class LesscssResourcesGrailsPlugin {
     // the plugin version
-    def version = "1.3.0.3"
+    def version = "1.3.0.3-SENSIS"
     // the version or versions of Grails the plugin is designed for
     def grailsVersion = "1.3.5 > *"
     // the other plugins this plugin depends on

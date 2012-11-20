@@ -7,20 +7,30 @@ import org.grails.plugin.resource.mapper.MapperPhase
  */
 import org.codehaus.groovy.grails.plugins.support.aware.GrailsApplicationAware
 import org.codehaus.groovy.grails.commons.GrailsApplication
-import org.lesscss.LessCompiler
-import org.lesscss.LessException
+import com.asual.lesscss.LessEngine
+import com.asual.lesscss.LessException
+import com.asual.lesscss.LessEngine
 
 class LesscssResourceMapper implements GrailsApplicationAware {
 
     GrailsApplication grailsApplication
 
+    LessEngine lessCompiler
+
     def phase = MapperPhase.GENERATION // need to run early so that we don't miss out on all the good stuff
 
     static defaultIncludes = ['**/*.less']
 
+    public LesscssResourceMapper() {
+        this(new LessEngine())
+    }
+
+    public LesscssResourceMapper(LessEngine lessCompiler) {
+        this.lessCompiler = lessCompiler
+    }
+
     def map(resource, config) {
-        LessCompiler lessCompiler = new LessCompiler()
-        lessCompiler.compress = config?.compress ?: false
+        boolean compress = config?.compress ?: false
         File originalFile = resource.processedFile
         File input = getOriginalFileSystemFile(resource.sourceUrl);
         File target = new File(generateCompiledFileFromOriginal(originalFile.absolutePath))
@@ -29,7 +39,7 @@ class LesscssResourceMapper implements GrailsApplicationAware {
             log.debug "Compiling LESS file [${originalFile}] into [${target}]"
         }
         try {
-            lessCompiler.compile input, target
+            lessCompiler.compile(input, target, compress)
             // Update mapping entry
             // We need to reference the new css file from now on
             resource.processedFile = target

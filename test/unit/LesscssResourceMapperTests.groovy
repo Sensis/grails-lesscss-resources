@@ -1,8 +1,8 @@
 import org.grails.plugin.resource.ResourceMeta
 import org.grails.plugin.resource.mapper.MapperPhase
 import org.junit.Test
-import org.lesscss.LessCompiler
 import org.gmock.WithGMock
+import com.asual.lesscss.LessEngine
 
 /**
  * @author Paul Fairless
@@ -14,8 +14,8 @@ class LesscssResourceMapperTests extends GroovyTestCase {
     def lessCompiler
 
     void setUp() {
-        lessCompiler = mock(LessCompiler, constructor())
-        mapper = new LesscssResourceMapper()
+        lessCompiler = mock(LessEngine)
+        mapper = new LesscssResourceMapper(lessCompiler)
         mapper.metaClass.log = [debug: {}, error: {}]
     }
 
@@ -25,12 +25,13 @@ class LesscssResourceMapperTests extends GroovyTestCase {
         def targetFile = mock(File, constructor('/var/file/file_less.css'))
         targetFile.exists().returns(true).stub()
 
-        def originalFile = mock(File)
-        def processedFile = mock(File)
+        File originalFile = mock(File)
+        originalFile.getAbsolutePath().returns('/var/file/' + fileName).stub()
+
+        File processedFile = mock(File)
         processedFile.getName().returns(fileName).stub()
         processedFile.getAbsolutePath().returns('/var/file/' + fileName).stub()
-        lessCompiler.compress.set(false)
-        lessCompiler.compile(originalFile, targetFile).once()
+        lessCompiler.compile(originalFile, targetFile, false).once()
 
         def config = [:]
         def resource = new ResourceMeta(contentType: '', tagAttributes: [rel: 'stylesheet/less'])
