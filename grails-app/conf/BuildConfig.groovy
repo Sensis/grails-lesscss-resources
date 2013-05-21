@@ -12,27 +12,14 @@ grails.project.dependency.resolution = {
     log "warn" // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
     repositories {
         grailsPlugins()
-        grailsHome()
-        grailsCentral()
-
-        // uncomment the below to enable remote dependency resolution
-        // from public Maven repositories
-        //mavenLocal()
         mavenCentral()
-        grailsRepo "http://grails.org/plugins"
-        //mavenRepo "http://snapshots.repository.codehaus.org"
-        //mavenRepo "http://repository.codehaus.org"
-        //mavenRepo "http://download.java.net/maven/2/"
-        //mavenRepo "http://repository.jboss.com/maven2/"
     }
 
     def seleniumVersion = "2.21.0"
-    def gebVersion = "0.7.0"
 
     dependencies {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
-        runtime "org.mozilla:rhino:1.7R4" // override in Asual LESS engine for perf gains.
-        runtime "com.asual.lesscss:lesscss-engine:1.3.0"
+        compile 'com.asual.lesscss:lesscss-engine:1.3.3'
 
         test("org.gmock:gmock:0.8.2") {
             export = false
@@ -47,17 +34,13 @@ grails.project.dependency.resolution = {
         test("org.seleniumhq.selenium:selenium-firefox-driver:$seleniumVersion") {
             export = false
         }
-
-        // You usually only need one of these, but this project uses both
-        test("org.codehaus.geb:geb-spock:$gebVersion") {
-            export = false
-        }
     }
     plugins {
-        test(":spock:0.6") {
+        test(":spock:0.7") {
             export = false
+            exclude "spock-grails-support"
         }
-        test(":geb:0.7.0") {
+        test(":geb:0.9.0") {
             export = false
         }
         compile(":resources:1.1.6") {
@@ -66,8 +49,5 @@ grails.project.dependency.resolution = {
         compile(":tomcat:$grailsVersion") {
             export = false
         }
-        /*compile(":release:2.0.3") {
-            export = false
-        }*/
     }
 }
